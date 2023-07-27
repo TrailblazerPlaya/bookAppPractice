@@ -1,0 +1,26 @@
+{
+  "name": "bookapppractise",
+  "version": "1.0.0",
+  "description": "123",
+  "main": "./src/app.js",
+  "type":"module",
+  "scripts": {
+    "start": "live-server",
+    "build": "rollup -c --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fornara/bookAppPractise.git"
+  },
+  "author": "fornara",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fornara/bookAppPractise/issues"
+  },
+  "homepage": "https://github.com/fornara/bookAppPractise#readme",
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^15.1.0",
+    "rollup": "^3.26.3",
+    "rollup-plugin-import-css": "^3.3.1"
+  }
+}
