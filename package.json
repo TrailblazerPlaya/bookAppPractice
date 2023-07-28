@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "123",
   "main": "./src/app.js",
-  "type":"module",
+  "type": "module",
   "scripts": {
     "start": "live-server",
     "build": "rollup -c --watch"
@@ -22,5 +22,8 @@
     "@rollup/plugin-node-resolve": "^15.1.0",
     "rollup": "^3.26.3",
     "rollup-plugin-import-css": "^3.3.1"
+  },
+  "dependencies": {
+    "on-change": "^4.0.2"
   }
 }
