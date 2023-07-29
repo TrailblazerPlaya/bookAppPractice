@@ -1061,6 +1061,11 @@
             this.state = state;
         }
 
+        search(){
+            const value = this.el.querySelector('input').value;
+            this.state.searchQuery = value;
+        }
+
         render(){
             this.el.classList.add("search");
             this.el.innerHTML = `
@@ -1076,6 +1081,12 @@
 
             <button aria-label="Поиск" ><img src="static/search-white.svg" alt="search"/></button>
         `;
+            this.el.querySelector('button').addEventListener('click', this.search.bind(this));
+            this.el.querySelector('input').addEventListener('keydown', (event) => {
+                if (event.code == 'Enter') {
+                    this.search();
+                }
+            });
             return this.el;
         }
     }
@@ -1092,12 +1103,31 @@
             super();
             this.appState = appState;
             this.appState = onChange(this.appState, this.appStateHook.bind(this));
+            this.state = onChange(this.state, this.stateHook.bind(this));
             this.setTitle('Поиск книг');
         }
 
         appStateHook(path) {
             if (path === 'favorites') {
                 console.log(path);
+            }
+        }
+        
+        
+        async loadList (q, offset) {
+            //вместо .org написал .com и пытался решить проблему c cors
+            const res = await fetch(`http://openlibrary.org/search.json?q=${q}&offset=${offset}`);
+            const data = await res.json();
+            return data;
+        }
+
+        async stateHook(path) {
+            if (path === 'searchQuery') {
+                this.state.loading = true;
+                const data = await this.loadList(this.state.searchQuery, this.state.offset);
+                this.state.loading = false;
+                // console.log(data);
+                this.state.list = data.docs;
             }
         }
 
