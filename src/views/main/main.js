@@ -2,6 +2,8 @@ import { AbstractView } from "../../common/view.js";
 import onChange from 'on-change';
 import { Header } from "../../components/header/header.js";
 import { Search } from "../../components/search/search.js";
+import { CardList } from "../../components/card-list/card-list.js";
+
 
 export class MainView extends AbstractView {
     state = {
@@ -29,8 +31,8 @@ export class MainView extends AbstractView {
     async loadList (q, offset) {
         //вместо .org написал .com и пытался решить проблему c cors
         const res = await fetch(`http://openlibrary.org/search.json?q=${q}&offset=${offset}`);
-        const data = await res.json();
-        return data;
+        const dataBook = await res.json();
+        return dataBook;
     }
 
     async stateHook(path) {
@@ -38,14 +40,26 @@ export class MainView extends AbstractView {
             this.state.loading = true;
             const data = await this.loadList(this.state.searchQuery, this.state.offset);
             this.state.loading = false;
-            // console.log(data);
+            console.log(data);
             this.state.list = data.docs;
+
+            // const CardList = document.querySelector('search-results');
+            // CardList.updateResultsCount(data.numFound); // обновление количества результатов
+            // CardList.showLoadingIndicator();
         }
+        
+
+        if (path === 'list' || path === 'loading'){
+            this.render();
+        }
+        
     }
 
     render() {
         const main = document.createElement('div');
         main.append(new Search(this.state).render()); 
+        // main.append(new CardList(this.state.list).render());
+        main.append(new CardList(this.appState, this.state).render());
         this.app.innerHTML = '';
         this.app.append(main);
         this.renderHeader();
