@@ -3,6 +3,7 @@ import onChange from 'on-change';
 import { Header } from "../../components/header/header.js";
 import { Search } from "../../components/search/search.js";
 import { CardList } from "../../components/card-list/card-list.js";
+// import { Card } from "../../components/card/card.js";
 
 
 export class MainView extends AbstractView {
@@ -11,7 +12,7 @@ export class MainView extends AbstractView {
         numFound: 0,
         loading: false,
         searchQuery: undefined,
-        offset: 0
+        offset: 0,
     }
 
     constructor(appState) {
@@ -22,9 +23,15 @@ export class MainView extends AbstractView {
         this.setTitle('Поиск книг');
     }
 
+    destroy() {
+        onChange.unsubscribe(this.appState);
+        onChange.unsubscribe(this.state);
+    }
+
     appStateHook(path) {
         if (path === 'favorites') {
-            console.log(path);
+            // this.state.favorites = this.appState.favorites;
+            this.render();
         }
     }
     
@@ -59,8 +66,13 @@ export class MainView extends AbstractView {
 
     render() {
         const main = document.createElement('div');
+        main.innerHTML = `
+            <h1>
+                Найдено книг: ${this.state.numFound}
+            </h1>
+        `;
         main.append(new Search(this.state).render()); 
-        // main.append(new CardList(this.state.list).render());
+        
         main.append(new CardList(this.appState, this.state).render());
         this.app.innerHTML = '';
         this.app.append(main);
